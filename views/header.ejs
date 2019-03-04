@@ -1,0 +1,133 @@
+<header>
+  <nav class="navbar navbar-expand-md navbar-dark bg-primary">
+    <div class="container">
+      <i class="fas fa-cloud-sun fa-3x"></i>
+      <a href="#" class="navbar-brand text-dark font-weight-bold mr-auto">
+        <h5>KnowWeather</h5>
+      </a>
+      <button class="navbar-toggler" data-toggle="collapse" data-target="#navbarId"><span
+          class="navbar-toggler-icon"></span></button>
+      <div class="collapse navbar-collapse" id="navbarId">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item">
+            <a href="/" class="nav-link">Home</a>
+          </li>
+          <li class="nav-item dropdown">
+            <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">My Account</a>
+            <div class="dropdown-menu">
+              <a href="#" class="dropdown-item text-info text-center font-weight-bold bg-light" data-toggle="modal"
+                data-target="#signInModal">Sign
+                In <i class="fas fa-user"></i></a>
+              <a href="#" class="dropdown-item text-center text-dark font-weight-bold bg-light" data-toggle="modal"
+                data-target="#signUpModal">Sign
+                Up <i class="fas fa-user-plus"></i></a>
+              <a href="#" class="dropdown-item text-center text-dark font-weight-bold bg-light" data-toggle="modal"
+                data-target="#forgotModal">Forgot Credentials</a>
+            </div>
+          </li>
+          <li class="nav-item">
+            <a href="/aboutus" class="nav-link">About Us</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+</header>
+<!-- Navigation Bar Ends -->
+
+<!-- Sign In Modal-->
+<div class="modal" id="signInModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header bg-dark">
+        <h3 class="modal-title ml-auto text-light font-weight-bold">Sign In</h3>
+        <button class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="signinform" method="POST" action="/login">
+          <div class="form-group">
+            <label for="username" class="d-none d-md-block m-auto">UserName </label>
+            <input type="text" name="username" placeholder="Enter Your UserName..." class="form-control m-auto">
+            <span id="loginusername-msg"></span>
+          </div>
+          <div class="form-group">
+            <label for="password" class="d-none d-md-block m-auto">PassWord </label>
+            <input type="password" name="password" placeholder="Enter Your password..." class="form-control m-auto">
+            <span id="loginpassword-msg"></span>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-primary" type="submit">Sign In</button>
+            <button class="btn btn-secondary" type="reset">Cancel</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Sign In Modal Ends-->
+
+<!-- Sign Up Modal-->
+<div class="modal" id="signUpModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header bg-dark">
+        <h3 class="modal-title font-weight-bold ml-auto text-light">Enter Your Details</h3>
+        <button class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="signupform">
+          <div class="form-group">
+            <label for="name">Enter Your UserName</label>
+            <input type="text" name="signupusername" class="form-control" placeholder="Enter Your UserName..">
+            <span id="username-msg"></span>
+          </div>
+          <div class="form-group">
+            <label for="email">Enter Your Email</label>
+            <input type="email" name="signupuseremail" class="form-control" placeholder="Enter Your Email..">
+            <span id="email-msg"></span>
+          </div>
+          <div class="form-group">
+            <label for="password">Enter Your password</label>
+            <input type="password" name="password1" class="form-control" placeholder="Enter Your password..">
+          </div>
+          <div class="form-group">
+            <label for="password">Confirm Your password</label>
+            <input type="password" name="password2" class="form-control" placeholder="Confirm Your password..">
+            <span id="password-msg"></span>
+          </div>
+          <div class="modal-footer bg-light">
+            <span class="text-weight-bold" id="singupform-msg"></span>
+            <button type="submit" class="btn btn-primary">Submit</button>
+            <button class="btn btn-secondary" type="reset">Cancel</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Sign Up Modal Ends-->
+
+<!-- Forgot UserName Modal-->
+<div class="modal" id="forgotModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header bg-dark">
+        <h3 class="modal-title ml-auto text-light font-weight-bold">Forgot Credentials</h3>
+        <button class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="forgotform">
+          <div class="form-group">
+            <label for="email" class="d-none d-md-block m-auto">Enter your Email</label>
+            <input type="email" name="forgotemail" placeholder="Enter Your Email..." class="form-control m-auto">
+            <span id="forgotemail-msg"></span>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-primary" type="submit">Send Data</button>
+            <button class="btn btn-secondary" type="reset">Cancel</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

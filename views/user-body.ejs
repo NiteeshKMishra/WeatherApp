@@ -1,0 +1,27 @@
+<section>
+  <div class="jumbotron flex-column main">
+    <div class="row">
+      <form action="/results" method="POST">
+        <div class="form-group d-flex">
+          <input type="search" name="search" id="search-u" class="form-control" placeholder="Enter your Address...">
+          <button type="submit"><i class="fas fa-search fa-2x"></i></button>
+        </div>
+      </form>
+    </div>
+    <div class="row" id="usersearchmsg">
+      <span id="usersearchmsgspan">Hello jshfksjfk;sjfld;skjc;lskjfpsk there</span>
+    </div>
+  </div>
+</section>
+<section>
+  <div class="sidenav">
+    <p class="text-center display-5 font-weight-bold">
+      Your History
+    </p>
+    <ul>
+      <% if(history){for(var his of history) {%>
+      <li><%=his%></li>
+      <%}}%>
+    </ul>
+  </div>
+</section>
