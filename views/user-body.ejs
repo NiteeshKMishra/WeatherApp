@@ -1,7 +1,7 @@
 <section>
-  <div class="jumbotron flex-column main">
+  <div class="jumbotron flex-column main" style="background-color: skyblue;">
     <div class="row">
-      <form action="/results" method="POST">
+      <form action="/results" method="POST" id="searchform">
         <div class="form-group d-flex">
           <input type="search" name="search" id="search-u" class="form-control" placeholder="Enter your Address...">
           <button type="submit"><i class="fas fa-search fa-2x"></i></button>
@@ -9,7 +9,7 @@
       </form>
     </div>
     <div class="row" id="usersearchmsg">
-      <span id="usersearchmsgspan">Hello jshfksjfk;sjfld;skjc;lskjfpsk there</span>
+      <span class="text-danger" id="searchmsgspan"><%=message%></span>
     </div>
   </div>
 </section>

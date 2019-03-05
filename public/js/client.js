@@ -179,5 +179,13 @@ jQuery('#clearhistory').on('click', function (event) {
   })
 });
 
+jQuery('#searchform').on('submit', function (event) {
+  search = jQuery('[name=search]').val();
+  if (!validateMessage(search)) {
+    event.preventDefault();
+    jQuery('#searchmsgspan').text('Please do not include empty values or special characters')
+  }
+});
+
 socket.on('disconnect', () => {
 });

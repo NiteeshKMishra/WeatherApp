@@ -38,9 +38,10 @@ app.use(passport.session());
 app.use(cors());
 app.use(flash());
 
+const public = path.join(__dirname, '../public');
 app.set('views', path.join(__dirname, '../views'));
 app.set('view engine', 'ejs');
-app.use(express.static('public'));
+app.use(express.static(public));
 
 var globaluser;
 
@@ -125,98 +126,102 @@ io.on('connection', (socket) => {
     console.log('Client Disconnected')
   });
 
-});
 
 
-/**Root Url */
-app.get('/', (req, res) => {
-  res.render('index.ejs');
-});
 
-app.post('/login', passport.authenticate('local', {
-  successRedirect: '/login',
-  failureRedirect: '/',
-  failureFlash: true
-}));
+  /**Root Url */
+  app.get('/', (req, res) => {
+    res.render('index.ejs', { message: '' });
+  });
+
+  app.post('/login', passport.authenticate('local', {
+    successRedirect: '/login',
+    failureRedirect: '/',
+    failureFlash: true
+  }));
 
 
-app.post('/results', (req, res) => {
-  if (req.user) {
-    UserHistory.insertMany({ userid: req.user._id, history: req.body.search })
-      .then((his, err) => {
-        if (err) {
-          res.send({ message: 'somthing went wrong. Please try after sometime' })
+  app.post('/results', (req, res) => {
+    if (req.user) {
+      UserHistory.insertMany({ userid: req.user._id, history: req.body.search })
+        .then((his, err) => {
+          if (err) {
+            res.render('index.ejs', { message: 'Something went wrong. Please try after sometime' })
+          }
+          Users.findByIdAndUpdate(req.user._id, { $push: { history: his[0]._id } }, { new: true }).then((users, err) => {
+            if (err) {
+              res.render('index.ejs', { message: 'Something went wrong. Please try after sometime' })
+            }
+          });
+        })
+    }
+    /** Geocode Locatio starts */
+    var geocodeUrl = 'https://maps.googleapis.com/maps/api/geocode/json?address=' + encodeURIComponent(req.body.search) + '&key=AIzaSyAoUv3nCnISetmOFf3_79hMIeJNN3linLA';
+
+    axios.get(geocodeUrl).
+      then((geolocation, err) => {
+        if (geolocation.data.status === 'ZERO_RESULTS') {
+          res.render('index.ejs', { message: 'No results have been found. Please Enter a different address' })
         }
-        Users.findByIdAndUpdate(req.user._id, { $push: { history: his[0]._id } }, { new: true }).then((users, err) => {
-          if (err) {
-            res.send({ message: 'somthing went wrong. Please try after sometime' })
-          }
-        });
-      })
-  }
-  /** Geocode Locatio starts */
-  var geocodeUrl = 'https://maps.googleapis.com/maps/api/geocode/json?address=' + encodeURIComponent(req.body.search) + '&key=AIzaSyAoUv3nCnISetmOFf3_79hMIeJNN3linLA';
-
-  axios.get(geocodeUrl).
-    then((geolocation, err) => {
-      if (geolocation.data.status === 'ZERO_RESULTS') {
-        res.send({ message: 'Zero results found' });
-      }
-      else if (geolocation.data.status === 'OK') {
-        let lat = geolocation.data.results[0].geometry.location.lat;
-        let lng = geolocation.data.results[0].geometry.location.lng;
-        axios.get(`https://api.darksky.net/forecast/d8c83a117cf2328169297cf131fd5453/${lat},${lng}`).then((weather, err) => {
-          if (err) {
-            res.send({ message: 'Weather cannot be retrieved for given location' });
-          }
-          else {
-            if (req.user) {
-              res.send(weather.data)
+        else if (geolocation.data.status === 'OK') {
+          let lat = geolocation.data.results[0].geometry.location.lat;
+          let lng = geolocation.data.results[0].geometry.location.lng;
+          axios.get(`https://api.darksky.net/forecast/d8c83a117cf2328169297cf131fd5453/${lat},${lng}`).then((weather, err) => {
+            if (err) {
+              res.render('index.ejs', { message: 'Weather cannot be retrieved for given location' });
             }
             else {
-              res.send({ message: 'No user is present' })
+              if (req.user) {
+                res.render('user-results.ejs', { user: req.user, weather: weather.data });
+              }
+              else {
+                res.render('results.ejs', weather.data);
+              }
             }
-          }
-        })
-      }
-      else if (err) {
-        res.send({ message: 'Weather cannot be retrieved for given location' })
-      }
+          })
+        }
+        else if (err) {
+          res.render('index.ejs', { message: 'Weather cannot be retrieved for given location' })
+        }
 
-    });
-  /** Geocode Location Ends*/
-});
+      });
+    /** Geocode Location Ends*/
+  });
 
-app.get('/results', (req, res) => {
 
-});
-
-app.get('/login', (req, res) => {
-  globaluser = req.user;
-  var userhistory = [];
-  var count = 0;
-  req.user.history.forEach(id => {
-    UserHistory.findById(id).then((result) => {
-      userhistory.push(result.history);
-      count = count + 1;
-      if (count === req.user.history.length) {
-        res.render('user.ejs', { user: req.user, history: userhistory });
-      }
-    }).catch((err) => {
-
+  app.get('/login', (req, res) => {
+    globaluser = req.user;
+    var userhistory = [];
+    var count = 0;
+    req.user.history.forEach(id => {
+      UserHistory.findById(id).then((result) => {
+        userhistory.push(result.history);
+        count = count + 1;
+        if (count === req.user.history.length) {
+          res.render('user.ejs', { user: req.user, history: userhistory, message: '' });
+        }
+      }).catch((err) => {
+        if (err) {
+          res.render('index.ejs', { message: 'Cannot Login Now. Please try after Sometime' })
+        }
+      });
     });
   });
-});
 
-app.get('/logout', (req, res) => {
-  req.session.destroy();
-  res.render('index.ejs');
+  app.get('/logout', (req, res) => {
+    req.session.destroy();
+    res.render('index.ejs', { message: '' });
+  });
+
+  app.get('/aboutus', (req, res) => {
+    res.render('aboutus.ejs')
+  })
+
 });
 
 server.listen(PORT, () => {
   console.log(`Server is up at Port ${PORT}`);
 });
 
-app.get('/aboutus', (req, res) => {
-  res.render('aboutus.ejs')
-})
+
+
