@@ -7,8 +7,8 @@ function sendMail(rec, username, password) {
       service: "gmail",
       host: "smtp.gmail.com",
       auth: {
-        user: "nknowweather@gmail.com",
-        pass: "Niti@219"
+        user: "",
+        pass: ""
       }
     });
 
